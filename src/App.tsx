@@ -1,9 +1,26 @@
+import { useEthers, useEthersStore } from './hooks/useEthers';
+import { EthersProvider } from './hooks/useEthers';
 import React from 'react';
+
 const App: React.FC = () => {
   return (
-    <div className="wrapper">
-      <h1>React 17 and TypeScript 4 App!🚀</h1>
-    </div>
+    <EthersProvider value={useEthers()}>
+      <Inner />
+    </EthersProvider>
+  );
+};
+
+const Inner: React.FC = () => {
+  const { establishConnection, connected } = useEthersStore();
+  return (
+    <>
+      <button disabled={connected} onClick={establishConnection}>Connect wallet</button>
+      {connected ? (
+        <div>Connected to wallet</div>
+      ) : (
+        <div>Not connected to wallet</div>
+      )}
+    </>
   );
 };
 export default App;
