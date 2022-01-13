@@ -1,15 +1,10 @@
 import { ethers, Signer } from 'ethers';
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 interface IEthersContext {
   establishConnection: () => void;
   connected: boolean;
+  provider: ethers.providers.JsonRpcProvider;
   signer?: Signer;
 }
 
@@ -25,22 +20,24 @@ export const EthersProvider: React.FC<{
 export const useEthers = (): IEthersContext => {
   const [connected, setConnected] = useState(false);
   const [signer, setSigner] = useState(undefined);
+  const [provider, setProvider] = useState(
+    new ethers.providers.CloudflareProvider() as ethers.providers.JsonRpcProvider
+  );
 
   async function establishConnection() {
-    const provider = new ethers.providers.Web3Provider(
-      (window as any).ethereum
-    );
+    const provider = new ethers.providers.Web3Provider((window as any).ethereum)
     await provider.send('eth_requestAccounts', []);
     const signer = provider.getSigner();
-    console.log('Account:', await signer.getAddress());
 
     setConnected(true);
+    setProvider(provider);
     setSigner(signer);
   }
 
   return {
     establishConnection,
     connected,
+    provider,
     signer,
   };
 };
