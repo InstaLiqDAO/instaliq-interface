@@ -1,11 +1,18 @@
 import { ethers, Signer } from 'ethers';
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 interface IEthersContext {
   establishConnection: () => void;
   connected: boolean;
   provider: ethers.providers.JsonRpcProvider;
   signer?: Signer;
+  address?: string;
 }
 
 const context = createContext<IEthersContext>(undefined);
@@ -23,15 +30,41 @@ export const useEthers = (): IEthersContext => {
   const [provider, setProvider] = useState(
     new ethers.providers.CloudflareProvider() as ethers.providers.JsonRpcProvider
   );
+  const [address, setAddress] = useState(undefined);
+
+  // TODO: Add loading state to fix stutter
+  useEffect(() => {
+    const getInitialProvider = async () => {
+      const provider = new ethers.providers.Web3Provider(
+        (window as any).ethereum
+      );
+      if (provider) {
+        const accounts = await provider.listAccounts();
+        if (accounts.length > 0) {
+          const signer = provider.getSigner();
+          const address = await signer.getAddress();
+          setProvider(provider);
+          setConnected(true);
+          setSigner(signer);
+          setAddress(address);
+        }
+      }
+    };
+
+    getInitialProvider();
+  }, []);
 
   async function establishConnection() {
-    const provider = new ethers.providers.Web3Provider((window as any).ethereum)
-    await provider.send('eth_requestAccounts', []);
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).ethereum
+    );
+    await provider?.send('eth_requestAccounts', []);
     const signer = provider.getSigner();
-
+    const address = await signer.getAddress();
     setConnected(true);
     setProvider(provider);
     setSigner(signer);
+    setAddress(address);
   }
 
   return {
@@ -39,6 +72,7 @@ export const useEthers = (): IEthersContext => {
     connected,
     provider,
     signer,
+    address,
   };
 };
 

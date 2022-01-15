@@ -1,20 +1,16 @@
-import { Contract } from 'ethers';
+import { Contract, ContractInterface } from 'ethers';
 import { useMemo } from 'react';
 import { useEthersStore } from './useEthers';
 
-export const useContractReadOnly = (address: string, abi: any): Contract => {
-  const { provider } = useEthersStore();
-  return useMemo(() => {
-    return new Contract(address, abi, provider);
-  }, [address, abi, provider]);
-};
-
-export const useContractWithSigner = (
+export const useContract = (
   address: string,
-  abi: any
-): Contract | undefined => {
-  const { signer, connected } = useEthersStore();
+  abi: ContractInterface
+): Contract => {
+  const { provider, connected, signer } = useEthersStore();
   return useMemo(() => {
-    return connected ? new Contract(address, abi, signer) : undefined;
-  }, [address, abi, signer]);
+    if (!provider) {
+      return undefined;
+    }
+    return new Contract(address, abi, connected && signer ? signer : provider);
+  }, [address, abi, provider, connected, signer]);
 };
