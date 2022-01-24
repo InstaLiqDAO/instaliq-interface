@@ -20,7 +20,7 @@ const styles = {
     },
   },
   disabled: {
-    backgroundColor: 'buttonPrimary',
+    backgroundColor: 'buttonDisabled',
   },
 };
 

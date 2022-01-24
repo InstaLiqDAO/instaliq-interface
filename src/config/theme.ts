@@ -2,7 +2,7 @@ import type { Theme } from 'theme-ui';
 
 export const theme: Theme = {
   fonts: {
-    body: 'Tahoma, sans-serif',
+    body: 'DM Sans, sans-serif',
     heading: '"Avenir Next", sans-serif',
     monospace: 'Menlo, monospace',
   },
@@ -19,7 +19,7 @@ export const theme: Theme = {
       padding: 2,
       borderRadius: 4,
       boxShadow: '0 0 8px rgba(0, 0, 0, 0.125)',
-      backgroundColor: '#3950a4'
+      backgroundColor: '#3950a4',
     },
   },
 };
