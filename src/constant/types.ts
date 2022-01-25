@@ -5,5 +5,9 @@ export type ListingData = {
   symbol: string;
   referenceToken: string;
   totalBid: BigNumber;
+  totalSupply: BigNumber;
+  currentPrice: BigNumber;
+  devReserve: BigNumber;
+  userBid: BigNumber;
   contract: Contract;
 };

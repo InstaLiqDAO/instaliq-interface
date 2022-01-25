@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Card } from 'theme-ui';
 
 import { useEthersStore } from '../../hooks/useEthers';
 import { Text, Button } from '../../components';
 import { useILSListingHub } from '../../hooks/useILSListingHub';
-import { getShortenedAddress } from '../../util/util';
+import { formatEther } from '../../util/util';
 import {
   fetchListingData,
   useInitialLiquidityPool,
@@ -13,7 +14,7 @@ import { ListingData } from '../../constant/types';
 import { Contract } from 'ethers';
 
 export const Home: React.FC = () => {
-  const { establishConnection, connected, address, signer } = useEthersStore();
+  const { connected, signer } = useEthersStore();
   const ilsListingHub = useILSListingHub();
   const [listings, setListings] = useState([] as string[]);
 
@@ -38,32 +39,18 @@ export const Home: React.FC = () => {
     }
   }, [connected, signer]);
 
-  console.log(listings);
-
-  return (
-    <Box sx={{ margin: 24 }}>
-      <Button
-        sx={{ backgroundColor: 'buttonPrimary' }}
-        variant="primary"
-        disabled={connected}
-        onClick={establishConnection}
-      >
-        <Text variant="primary">
-          {connected ? getShortenedAddress(address) : 'Connect wallet'}
-        </Text>
-      </Button>
-      {listings.length && <LiqLaunch liqListing={listings[0]} />}
-    </Box>
-  );
+  return listings.length ? <LiqLaunch liqListing={listings[0]} /> : null;
 };
 
 const LiqLaunch: React.FC<{ liqListing: string }> = ({ liqListing }) => {
+  const navigate = useNavigate();
   const listingContracts = useInitialLiquidityPool(liqListing);
   const [listingData, setListingData] = useState(
     undefined as ListingData | undefined
   );
 
   const getListingData = async (liqListing: Contract) => {
+    // TODO: reduce size of fetch
     const listingData = await fetchListingData(liqListing);
 
     setListingData(listingData);
@@ -76,7 +63,7 @@ const LiqLaunch: React.FC<{ liqListing: string }> = ({ liqListing }) => {
   }, [listingContracts]);
 
   return listingData ? (
-    <Box sx={{ margin: 100 }}>
+    <Box sx={{ mt: 32, ml: 100, mr: 100 }}>
       <Card>
         <Box sx={{ margin: 12, textAlign: 'center' }}>
           <Text variant="primary" sx={{ fontSize: 36, fontWeight: 500 }}>
@@ -108,11 +95,16 @@ const LiqLaunch: React.FC<{ liqListing: string }> = ({ liqListing }) => {
           </Box>
           <Box sx={{ mb: 24 }}>
             <Text variant="primary" sx={{ fontSize: 24 }}>
-              {listingData.totalBid.toString()} ETH
+              {formatEther(listingData.totalBid)} WETH
             </Text>
           </Box>
           <Box sx={{ margin: 12 }}>
-            <Button variant="primary" onClick={() => {}}>
+            <Button
+              variant="primary"
+              onClick={() => {
+                navigate(`/listing?address=${liqListing}`);
+              }}
+            >
               <Text variant="primary">Launch details</Text>
             </Button>
           </Box>

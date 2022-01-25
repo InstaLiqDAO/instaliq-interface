@@ -1,18 +1,20 @@
 import { BigNumber, Contract } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { Box, Input } from 'theme-ui';
-import { Text, Button } from '../../components';
+import { Box } from 'theme-ui';
+import { formatEther } from '../../util/util';
+import { Text, Button, TokenInput } from '../../components';
 import { useERC20 } from '../../hooks/useERC20';
 import { useEthers } from '../../hooks/useEthers';
-import { ListingData } from './Listings';
+import { useListingStore } from '../../hooks/useListing';
 
 type ERC20Data = {
   allowance: BigNumber;
   balance: BigNumber;
 };
 
-export const BidForm: React.FC<{ listing: ListingData }> = ({ listing }) => {
-  const erc20 = useERC20(listing.referenceToken);
+export const BidForm: React.FC = () => {
+  const { listingData, refreshListingData } = useListingStore()
+  const erc20 = useERC20(listingData.referenceToken);
   const { address } = useEthers();
   const [bidValue, setBidValue] = useState(undefined as BigNumber | undefined);
   const [erc20Data, setERC20Data] = useState(
@@ -20,23 +22,24 @@ export const BidForm: React.FC<{ listing: ListingData }> = ({ listing }) => {
   );
 
   async function approve(amount: BigNumber) {
-    const tx1 = await erc20.approve(listing.contract.address, amount);
+    const tx1 = await erc20.approve(listingData.contract.address, amount);
     await tx1.wait();
 
     await getERC20Data(erc20, address);
   }
 
   async function placeBid(amount: BigNumber) {
-    const tx = await listing.contract.placeBid(amount);
+    const tx = await listingData.contract.placeBid(amount);
     await tx.wait();
 
     await getERC20Data(erc20, address);
+    await refreshListingData();
     setBidValue(undefined);
   }
 
   async function getERC20Data(erc20: Contract, address: string) {
     const data = await Promise.all([
-      erc20.allowance(address, listing.contract.address),
+      erc20.allowance(address, listingData.contract.address),
       erc20.balanceOf(address),
     ]);
 
@@ -55,26 +58,7 @@ export const BidForm: React.FC<{ listing: ListingData }> = ({ listing }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ mb: '8px' }}>
-        <Input
-          sx={{
-            backgroundColor: 'white',
-            '::-webkit-inner-spin-button': {
-              '-webkit-appearance': 'none',
-              margin: 0,
-            },
-            '::-webkit-outer-spin-button': {
-              '-webkit-appearance': 'none',
-              margin: 0,
-            },
-          }}
-          type="number"
-          value={bidValue ? bidValue.toNumber() : undefined}
-          onChange={(e) =>
-            e.target.value
-              ? setBidValue(BigNumber.from(e.target.value))
-              : setBidValue(undefined)
-          }
-        />
+        <TokenInput value={bidValue} setValue={setBidValue} />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
         <Box sx={{ flex: 1, display: 'flex', mr: '4px' }}>
@@ -102,6 +86,13 @@ export const BidForm: React.FC<{ listing: ListingData }> = ({ listing }) => {
           </Button>
         </Box>
       </Box>
+      {erc20Data && (
+        <Box sx={{ mt: 12 }}>
+          <Text variant="primary" sx={{ fontSize: 14 }}>
+            {`Available WETH: ${formatEther(erc20Data.balance)}`}
+          </Text>
+        </Box>
+      )}
     </Box>
   );
 };

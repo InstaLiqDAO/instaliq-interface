@@ -35,7 +35,7 @@ export const Button: React.FC<IProps> = ({
     <ThemeButton
       disabled={disabled}
       onClick={onClick}
-      sx={{ ...styles[disabled ? 'disabled' : variant], ...sx }}
+      sx={{ padding: 12, ...styles[disabled ? 'disabled' : variant], ...sx }}
     >
       {children}
     </ThemeButton>

@@ -3,7 +3,7 @@ import { Contract } from 'ethers';
 import { Box, Card } from 'theme-ui';
 import { useInitialLiquidityPoolList } from '../../hooks/useInitialLiquidityPool';
 import { Text } from '../../components';
-import { BidForm } from './BidForm';
+import { BidForm } from '../Listing/BidForm';
 
 export type ListingData = {
   name: string;

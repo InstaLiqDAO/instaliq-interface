@@ -23,6 +23,10 @@ export async function fetchListingData(
     listing.symbol(),
     listing.referenceToken(),
     listing.totalBid(),
+    listing.totalSupply(),
+    listing.currentPrice(),
+    listing.devReserveTokenNumber(),
+    listing.getBid(),
   ]);
 
   return {
@@ -30,6 +34,10 @@ export async function fetchListingData(
     symbol: listingData[1],
     referenceToken: listingData[2],
     totalBid: listingData[3],
+    totalSupply: listingData[4],
+    currentPrice: listingData[5],
+    devReserve: listingData[6],
+    userBid: listingData[7],
     contract: listing,
   };
 }

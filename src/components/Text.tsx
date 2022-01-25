@@ -12,6 +12,7 @@ interface IProps {
 
 const textStyles = {
   primary: {
+    fontSize: [16],
     color: 'textPrimary',
     fontFamily: 'body',
   },

@@ -10,6 +10,7 @@ export const theme: Theme = {
     textPrimary: '#fff',
 
     background: '#221b47',
+    navColor: '#181235',
 
     buttonPrimary: '#7b79f7',
     buttonDisabled: '#848884',
@@ -22,4 +23,9 @@ export const theme: Theme = {
       backgroundColor: '#3950a4',
     },
   },
+  styles: {
+    hr: {
+      color: 'darkslategray'
+    }
+  }
 };

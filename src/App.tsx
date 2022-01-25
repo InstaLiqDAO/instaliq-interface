@@ -6,6 +6,8 @@ import { useEthers } from './hooks/useEthers';
 import { EthersProvider } from './hooks/useEthers';
 import { Home } from './pages/Home/Home';
 import { theme } from './config/theme';
+import { Listing } from './pages/Listing/Listing';
+import { Nav } from './Nav';
 
 const App: React.FC = () => {
   return (
@@ -22,8 +24,10 @@ const App: React.FC = () => {
 const Inner: React.FC = () => {
   return (
     <Box sx={{ backgroundColor: 'background' }}>
+      <Nav/>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/listing" element={<Listing />} />
       </Routes>
     </Box>
   );
