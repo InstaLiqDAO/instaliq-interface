@@ -8,24 +8,28 @@ export const theme: Theme = {
   },
   colors: {
     textPrimary: '#fff',
+//212429
+    background: '#222222',
+    navColor: 'transparent',
 
-    background: '#221b47',
-    navColor: '#181235',
-
-    buttonPrimary: '#7b79f7',
+    buttonPrimary: '#008ee0',
     buttonDisabled: '#848884',
+    buttonAddress: '#f72585'
   },
   cards: {
     primary: {
       padding: 2,
       borderRadius: 4,
       boxShadow: '0 0 8px rgba(0, 0, 0, 0.125)',
-      backgroundColor: '#3950a4',
+      backgroundColor: '#222222',
     },
   },
   styles: {
     hr: {
       color: 'darkslategray'
-    }
+    },
+    spinner: {
+      color: '#848884',
+    },
   }
 };

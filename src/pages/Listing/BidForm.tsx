@@ -1,6 +1,6 @@
 import { BigNumber, Contract } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { Box } from 'theme-ui';
+import { Box, Spinner } from 'theme-ui';
 import { formatEther } from '../../util/util';
 import { Text, Button, TokenInput } from '../../components';
 import { useERC20 } from '../../hooks/useERC20';
@@ -13,27 +13,33 @@ type ERC20Data = {
 };
 
 export const BidForm: React.FC = () => {
-  const { listingData, refreshListingData } = useListingStore()
+  const { listingData, refreshListingData } = useListingStore();
   const erc20 = useERC20(listingData.referenceToken);
   const { address } = useEthers();
   const [bidValue, setBidValue] = useState(undefined as BigNumber | undefined);
   const [erc20Data, setERC20Data] = useState(
     undefined as ERC20Data | undefined
   );
+  const [approveLoading, setApproveLoading] = useState(false);
+  const [bidLoading, setBidLoading] = useState(false);
 
   async function approve(amount: BigNumber) {
     const tx1 = await erc20.approve(listingData.contract.address, amount);
+    setApproveLoading(true);
     await tx1.wait();
 
     await getERC20Data(erc20, address);
+    setApproveLoading(false);
   }
 
   async function placeBid(amount: BigNumber) {
     const tx = await listingData.contract.placeBid(amount);
+    setBidLoading(true);
     await tx.wait();
 
     await getERC20Data(erc20, address);
     await refreshListingData();
+    setBidLoading(false);
     setBidValue(undefined);
   }
 
@@ -67,10 +73,15 @@ export const BidForm: React.FC = () => {
             variant="primary"
             onClick={() => approve(bidValue)}
             disabled={
-              !bidValue || !(erc20Data && erc20Data.balance.gte(bidValue))
+              !bidValue ||
+              !(erc20Data && bidValue.gt(0) && erc20Data.balance.gte(bidValue))
             }
           >
-            <Text variant="primary">Approve</Text>
+            {approveLoading ? (
+              <Spinner size={17} />
+            ) : (
+              <Text variant="primary">Approve</Text>
+            )}
           </Button>
         </Box>
         <Box sx={{ flex: 1, display: 'flex', ml: '4px' }}>
@@ -79,10 +90,19 @@ export const BidForm: React.FC = () => {
             variant="primary"
             onClick={() => placeBid(bidValue)}
             disabled={
-              !bidValue || !(erc20Data && erc20Data.allowance.gte(bidValue))
+              !bidValue ||
+              !(
+                erc20Data &&
+                bidValue.gt(0) &&
+                erc20Data.allowance.gte(bidValue)
+              )
             }
           >
-            <Text variant="primary">Bid</Text>
+            {bidLoading ? (
+              <Spinner size={17} />
+            ) : (
+              <Text variant="primary">Bid</Text>
+            )}
           </Button>
         </Box>
       </Box>

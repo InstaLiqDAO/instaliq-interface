@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 import React, { useState } from 'react';
-import { Box } from 'theme-ui';
+import { Box, Spinner } from 'theme-ui';
 import { formatEther } from '../../util/util';
 import { Text, Button, TokenInput } from '../../components';
 import { useListingStore } from '../../hooks/useListing';
@@ -10,12 +10,15 @@ export const WithdrawForm: React.FC = () => {
   const [withdrawValue, setWithdrawValue] = useState(
     undefined as BigNumber | undefined
   );
+  const [withdrawLoading, setWithdrawLoading] = useState(false);
 
   async function withdrawBid(amount: BigNumber) {
     const tx = await listingData.contract.withdrawBid(amount);
+    setWithdrawLoading(true);
     await tx.wait();
 
     await refreshListingData();
+    setWithdrawLoading(false);
     setWithdrawValue(undefined);
   }
 
@@ -31,10 +34,18 @@ export const WithdrawForm: React.FC = () => {
             variant="primary"
             onClick={() => withdrawBid(withdrawValue)}
             disabled={
-              !(withdrawValue && listingData.userBid.gte(withdrawValue))
+              !(
+                withdrawValue &&
+                withdrawValue.gt(0) &&
+                listingData.userBid.gte(withdrawValue)
+              )
             }
           >
-            <Text variant="primary">Withdraw</Text>
+            {withdrawLoading ? (
+              <Spinner size={17} />
+            ) : (
+              <Text variant="primary">Withdraw</Text>
+            )}
           </Button>
         </Box>
       </Box>

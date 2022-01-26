@@ -77,7 +77,7 @@ export const Listing: React.FC<{ listing: ListingData }> = ({ listing }) => {
         <Text variant="primary">{listing.symbol}</Text>
       </Box>
       <Box sx={{ mt: 24, display: 'flex' }}>
-        <BidForm listing={listing}/>
+        <BidForm />
       </Box>
     </>
   );

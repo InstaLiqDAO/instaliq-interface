@@ -14,6 +14,7 @@ interface IProps {
 
 const styles = {
   primary: {
+    backgroundImage: 'linear-gradient(to right, #752c84, #008ee0)',
     backgroundColor: 'buttonPrimary',
     '&:hover': {
       cursor: 'pointer',

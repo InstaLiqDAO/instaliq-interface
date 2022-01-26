@@ -23,7 +23,7 @@ const App: React.FC = () => {
 
 const Inner: React.FC = () => {
   return (
-    <Box sx={{ backgroundColor: 'background' }}>
+    <Box sx={{ backgroundImage: 'linear-gradient(to bottom right, #222222 39%, #1b4748)', paddingBottom: 250}}>
       <Nav/>
       <Routes>
         <Route path="/" element={<Home />} />
