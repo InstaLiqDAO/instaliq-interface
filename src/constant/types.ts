@@ -9,5 +9,6 @@ export type ListingData = {
   currentPrice: BigNumber;
   devReserve: BigNumber;
   userBid: BigNumber;
+  allBids: BigNumber[];
   contract: Contract;
 };

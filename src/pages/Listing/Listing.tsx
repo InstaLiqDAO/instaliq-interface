@@ -1,21 +1,17 @@
-import { BigNumber, Contract } from 'ethers';
-import {
-  fetchListingData,
-  useInitialLiquidityPool,
-} from '../../hooks/useInitialLiquidityPool';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Box, Card, Divider } from 'theme-ui';
-import { ListingData } from '../../constant/types';
 import { BidForm } from './BidForm';
 import { Text } from '../../components';
 import { WithdrawForm } from './WithdrawForm';
-import { formatEther } from '../../util/util';
+import { formatEther, stringNumberWithCommas } from '../../util/util';
 import {
   ListingProvider,
   useListing,
   useListingStore,
 } from '../../hooks/useListing';
+import { DistributionChart } from './TokenDistributionChart';
+import { BidRangeChart } from './BidRangeChart';
 
 export const Listing: React.FC = () => {
   const [searchParams, _] = useSearchParams();
@@ -55,8 +51,22 @@ const Inner: React.FC = () => {
             />
             <Divider />
             <TableItem
-              header="Total Supply for Liquidity"
-              data={listingData.totalSupply.toString()}
+              header="Supply for Liquidity"
+              data={stringNumberWithCommas(
+                listingData.totalSupply.div(2).toString()
+              )}
+            />
+            <Divider />
+            <TableItem
+              header="Supply Distributed to Bidders"
+              data={stringNumberWithCommas(
+                listingData.totalSupply.div(2).toString()
+              )}
+            />
+            <Divider />
+            <TableItem
+              header="Supply Reserved for Team"
+              data={stringNumberWithCommas(listingData.devReserve.toString())}
             />
             <Divider />
             <TableItem
@@ -65,14 +75,15 @@ const Inner: React.FC = () => {
             />
             <Divider />
             <TableItem
-              header="Supply Reserved for Team"
-              data={listingData.devReserve.toString()}
-            />
-            <Divider />
-            <TableItem
               header="Your Bid"
               data={`${formatEther(listingData.userBid)} WETH`}
             />
+          </Box>
+          <Box sx={{ margin: 24 }}>
+            <DistributionChart />
+          </Box>
+          <Box sx={{ margin: 24 }}>
+            <BidRangeChart />
           </Box>
         </Card>
       </Box>

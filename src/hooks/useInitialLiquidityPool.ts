@@ -27,6 +27,7 @@ export async function fetchListingData(
     listing.currentPrice(),
     listing.devReserveTokenNumber(),
     listing.getBid(),
+    listing.getAllBids()
   ]);
 
   return {
@@ -38,6 +39,7 @@ export async function fetchListingData(
     currentPrice: listingData[5],
     devReserve: listingData[6],
     userBid: listingData[7],
+    allBids: listingData[8],
     contract: listing,
   };
 }

@@ -7,6 +7,7 @@ export const initialLiquidityPoolAbi = [
     'function currentPrice() view returns (uint256)',
     'function devReserveTokenNumber() view returns (uint256)',
     'function getBid() view returns (uint256)',
+    'function getAllBids() view returns (uint[] memory)',
 
     'function placeBid(uint256 amount) returns (bool)',
     'function withdrawBid(uint256 amount) returns (bool)',

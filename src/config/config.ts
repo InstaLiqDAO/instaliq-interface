@@ -17,7 +17,7 @@ type AppConfig = {
 export const appConfig: AppConfig = {
   local: {},
   ropsten: {
-    ILSListingHubAddress: '0x162266815DA0Eed3888B6B143199911Aa0B76e9c',
+    ILSListingHubAddress: '0xeaD3075dc786d01e55e905e1e5CB069f37870e0a',
   },
   prod: {},
 };

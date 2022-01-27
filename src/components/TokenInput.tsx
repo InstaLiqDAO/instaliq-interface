@@ -27,7 +27,6 @@ export const TokenInput: React.FC<IProps> = ({ value, setValue, sx }) => {
   const [stringValue, setStringValue] = useState(value ? formatEther(value) : '');
 
   const validateTokenInput = (value: string) => {
-    console.log(value);
     const regexp = /^\d{0,6}((\d\.)|(\.\d))?\d{0,9}$/;
 
     if (regexp.test(value)) {

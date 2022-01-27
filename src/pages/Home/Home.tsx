@@ -22,11 +22,11 @@ export const Home: React.FC = () => {
     // const tx = await ilsListingHub.createInitialLiquidityPool(
     //   'InstaLiq Token',
     //   'LIQ',
-    //   200000000,
+    //   180000000,
     //   0,
     //   '0xc778417e063141139fce010982780140aa0cd5ab',
     //   Date.now() - 100000,
-    //   0
+    //   20000000
     // );
 
     // await tx.wait();

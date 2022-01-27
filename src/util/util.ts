@@ -14,6 +14,10 @@ export function getShortenedAddress(address: string | undefined) {
 }
 
 export function formatEther(number: BigNumber) {
-    const maxLength = 10;
+    const maxLength = 16;
     return ethersFormatter(number).substring(0, maxLength);
+}
+
+export function stringNumberWithCommas(n: string) {
+  return n.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
